@@ -84,8 +84,10 @@ int SymTable_put(SymTable_T oSymTable,
 
     assert(oSymTable != NULL);
 
-    present = contains(oSymTable, pcKey);
-    if (present) return 0;
+
+
+     present = exists(oSymTable, pcKey);
+    if (present!=NULL) return 0;
     else {
         newNode = (struct Node*)malloc(sizeof(struct Node));
         if (newNode == NULL)
@@ -116,7 +118,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
     oldVal = present->pvValue;
     present->pvValue = pvValue;
-    return oldVal;
+    return (void*)oldVal;
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
@@ -134,14 +136,14 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
 
     present = exists(oSymTable, pcKey);
     if (present==NULL) return NULL;
-    return present->pvValue;
+    return (void*)(present->pvValue);
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     struct Node *current;
     struct Node *next;
     struct Node *prev;
-    void *val;
+    const void *val;
 
     
     assert(oSymTable != NULL);
@@ -180,8 +182,7 @@ void SymTable_map(SymTable_T oSymTable,
     {
         
         /*call (*pfApply)(pcKey, pvValue, pvExtra) for each pcKey/pvValue binding in oSymTable.*/
-        void* pvExtraCopy = pvExtra;
-        (*pfApply)((char*)current->pcKey, (void*)current->pvValue, pvExtraCopy);
+        (*pfApply)((char*)current->pcKey, (void*)current->pvValue, (void*)pvExtra);
         next = current->next;
 
     }
