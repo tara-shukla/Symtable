@@ -10,7 +10,7 @@ struct Node {
    /* The binding key */
     char pcKey;
     /*the matching value*/
-    void *pvValue;
+    const void *pvValue;
 
    /* The address of the next StackNode. */
    struct Node *next;
@@ -64,6 +64,7 @@ void SymTable_free(SymTable_T oSymTable){
         current = next)
    {
       next = current->next;
+      free((char*)(current->pcKey));
       free(current);
    }
 
@@ -150,7 +151,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     {
         if (current->pcKey == *pcKey){
             val = current->pvValue;
-            free(current->pcKey);
+            free((char*)(current->pcKey));
             prev->next = next;
             oSymTable->len--;
             return val;
@@ -179,7 +180,7 @@ void SymTable_map(SymTable_T oSymTable,
         
         /*call (*pfApply)(pcKey, pvValue, pvExtra) for each pcKey/pvValue binding in oSymTable.*/
 
-        (*pfApply)((void*)current->pcKey, (void*)current->pvValue, pvExtra);
+        (*pfApply)((char*)current->pcKey, (void*)current->pvValue, pvExtra);
     }
 }
 

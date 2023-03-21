@@ -5,7 +5,7 @@
 #ifndef SYMTABLE_INCLUDED
 #define SYMTABLE_INCLUDED
 #include<stddef.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
