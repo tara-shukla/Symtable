@@ -79,14 +79,14 @@ size_t SymTable_getLength(SymTable_T oSymTable){
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue){
     struct Node *newNode;
-    int present;
+    struct Node* present;
     char *pcKeyCopy;
 
     assert(oSymTable != NULL);
 
 
 
-     present = exists(oSymTable, pcKey);
+    present = exists(oSymTable, pcKey);
     if (present!=NULL) return 0;
     else {
         newNode = (struct Node*)malloc(sizeof(struct Node));
@@ -157,7 +157,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
             free(current->pcKey);
             prev->next = next;
             oSymTable->len--;
-            return val;
+            return (void*)val;
         }
         next = current->next;
         prev = current;
