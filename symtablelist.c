@@ -8,7 +8,7 @@
 
 struct Node {
    /* The binding key */
-    char pcKey;
+    char *pcKey;
     /*the matching value*/
     const void *pvValue;
 
@@ -45,7 +45,7 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey){
         current != NULL;
         current = next)
     {
-        if (current->pcKey == *pcKey){
+        if (current->pcKey == pcKey){
             return current;
         }
         next = current->next;
@@ -64,7 +64,7 @@ void SymTable_free(SymTable_T oSymTable){
         current = next)
    {
       next = current->next;
-      free((char*)(current->pcKey));
+      free(current->pcKey);
       free(current);
    }
 
@@ -81,6 +81,7 @@ int SymTable_put(SymTable_T oSymTable,
     struct Node *newNode;
     int present;
     char *pcKeyCopy;
+
     assert(oSymTable != NULL);
 
     present = contains(oSymTable, pcKey);
@@ -90,7 +91,7 @@ int SymTable_put(SymTable_T oSymTable,
         if (newNode == NULL)
             return 0;
 
-        char* pcKeyCopy = malloc(sizeof(char)* (strlen(pcKey)+1));
+        pcKeyCopy = malloc(sizeof(char)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) return 0;
         strcpy(pcKeyCopy,pcKey);
         newNode->pcKey = pcKeyCopy;
@@ -106,7 +107,7 @@ int SymTable_put(SymTable_T oSymTable,
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue){
     
-    void * oldVal;
+    const void * oldVal;
     struct Node *present; 
     assert (oSymTable!=NULL);
 
@@ -149,9 +150,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         current != NULL;
         current = next)
     {
-        if (current->pcKey == *pcKey){
+        if (current->pcKey == pcKey){
             val = current->pvValue;
-            free((char*)(current->pcKey));
+            free(current->pcKey);
             prev->next = next;
             oSymTable->len--;
             return val;
@@ -179,8 +180,10 @@ void SymTable_map(SymTable_T oSymTable,
     {
         
         /*call (*pfApply)(pcKey, pvValue, pvExtra) for each pcKey/pvValue binding in oSymTable.*/
+        void* pvExtraCopy = pvExtra;
+        (*pfApply)((char*)current->pcKey, (void*)current->pvValue, pvExtraCopy);
+        next = current->next;
 
-        (*pfApply)((char*)current->pcKey, (void*)current->pvValue, pvExtra);
     }
 }
 
