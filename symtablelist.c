@@ -154,8 +154,10 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         if (strcmp((current->pcKey), pcKey)==0){
             oSymTable->len--;
 
-            val = current->pvValue;
+            /*val = current->pvValue;*/
             prev->next = next;
+            /*free(current->pcKey);*/
+
 
             return (void*)val;
         }
