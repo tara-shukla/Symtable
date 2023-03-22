@@ -294,7 +294,7 @@ static void testKeyOwnership(void)
    strcpy(acKey, "xxx");
    pcValue = (char*)SymTable_get(oSymTable, "Mantle");
    ASSURE(pcValue == acCenterField);
-
+   
    SymTable_free(oSymTable);
 }
 

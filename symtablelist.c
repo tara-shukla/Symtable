@@ -45,7 +45,7 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey){
         current != NULL;
         current = next)
     {
-        if (current->pcKey == pcKey){
+        if (strcomp((current->pcKey), pcKey)==0){
             return current;
         }
         next = current->next;
@@ -83,8 +83,6 @@ int SymTable_put(SymTable_T oSymTable,
     char *pcKeyCopy;
 
     assert(oSymTable != NULL);
-
-
 
     present = exists(oSymTable, pcKey);
     if (present!=NULL) return 0;
