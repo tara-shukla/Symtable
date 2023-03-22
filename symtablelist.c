@@ -64,7 +64,7 @@ void SymTable_free(SymTable_T oSymTable){
         current = next)
    {
       next = current->next;
-      SymTable_remove(oSymTable,current);
+      SymTable_remove(oSymTable,current->pcKey);
       free(current);
    }
 
