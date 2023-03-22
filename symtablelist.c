@@ -140,32 +140,26 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     struct Node *current;
-    struct Node *next;
     struct Node *prev;
+    struct Node *target;
     const void *val;
 
     
     assert(oSymTable != NULL);
 
-    for (current = oSymTable->first;
-        current != NULL;
-        current = next)
-    {
-        if (strcmp((current->pcKey), pcKey)==0){
-            oSymTable->len--;
-            val = current->pvValue;
+    target = exists(oSymTable,pcKey);
+    if (target==NULL)return NULL;
 
-            prev->next = current->next;
-            free(current->pcKey);
-            free(current);
-            
-            return (void*)val;
-        }
-        next = current->next;
+
+    current = oSymTable->first;
+    while(current!=target&&current!=NULL){
         prev = current;
+        current = current->next;
     }
 
-    return NULL;
+    prev->next = current->next;
+    free(current->pcKey);
+    free(current);
 }
 
 void SymTable_map(SymTable_T oSymTable,
