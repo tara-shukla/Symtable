@@ -156,8 +156,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
             val = current->pvValue;
             /*prev->next = next;*/
-            /*free(current->pcKey);*/
-
+            free(current->pcKey);
 
             return (void*)val;
         }
