@@ -150,7 +150,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         current != NULL;
         current = next)
     {
-        if (current->pcKey == pcKey){
+        if (strcmp((current->pcKey), pcKey)==0){
             val = current->pvValue;
             free(current->pcKey);
             prev->next = next;
