@@ -157,9 +157,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         current = current->next;
     }
 
+    val = current->pvValue;
     prev->next = current->next;
     free(current->pcKey);
     free(current);
+
+    return (void*)val;
 }
 
 void SymTable_map(SymTable_T oSymTable,
