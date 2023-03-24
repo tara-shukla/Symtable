@@ -172,13 +172,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     }
     else {
         prev->next = current->next;
-        printf("hello");
     }
 
     
     /*free(current->pcKey);*/
     /*free(current);*/
-
+    printf(current->pcKey);
     return (void*)val;
 }
 
