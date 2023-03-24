@@ -166,15 +166,17 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     val = current->pvValue;
 
     /*check if target was first*/
-    if (prev == NULL){
+    if (current==oSymTable->first){
         /*oSymTable->first = current->next;*/
         printf("here");
     }
     else {
         prev->next = current->next;
+
     }
 
     
+    printf(prev->pcKey);
     /*free(current->pcKey);*/
     /*free(current);*/
     return (void*)val;
