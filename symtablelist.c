@@ -4,6 +4,7 @@
 /*--------------------------------------------------------------------*/
 
 #include "symtable.h"
+#include<stdio.h>
 #include <assert.h>
 
 struct Node {
