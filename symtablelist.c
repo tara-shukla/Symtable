@@ -148,7 +148,10 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     assert(oSymTable != NULL);
 
     target = exists(oSymTable,pcKey);
-    if (target==NULL)return NULL;
+    if (target==NULL){
+        fprintf("nullt");
+        return NULL;
+    }
 
 
     current = oSymTable->first;
@@ -162,11 +165,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     val = current->pvValue;
 
     /*check if target was first*/
-    if (prev ==NULL){
+    if (prev == NULL){
         oSymTable->first = current->next;
+        fprintf("here");
     }
     else {
         prev->next = current->next;
+        fprintf("hello");
     }
 
     
