@@ -1,10 +1,9 @@
 /*--------------------------------------------------------------------*/
-/* stra.c                                             */
+/* symtablelist.c                                             */
 /* Author: Tara Shukla                                              */
 /*--------------------------------------------------------------------*/
 
 #include "symtable.h"
-#include<stdio.h>
 #include <assert.h>
 
 struct Node {
@@ -65,7 +64,6 @@ void SymTable_free(SymTable_T oSymTable){
         current = next)
    {
       next = current->next;
-      /*SymTable_remove(oSymTable,current->pcKey);*/
       free(current->pcKey);
       free(current);
    }
