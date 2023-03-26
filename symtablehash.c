@@ -178,7 +178,7 @@ int SymTable_put(SymTable_T oSymTable,
         }
 
         /*should this be size of char or size of char*  ? */
-        pcKeyCopy = malloc(sizeof(char*)* (strlen(pcKey)+1));
+        pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) return 0;
         strcpy(pcKeyCopy,pcKey);
         newNode->pcKey = pcKeyCopy;
