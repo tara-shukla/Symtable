@@ -45,7 +45,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 
 /*helper function to rehash all values and expand the hash function*/
 void expandHash(SymTable_T oSymTable){
-    int count = 0;
+    size_t count = 0;
     int bucketIndex = 0;
     struct Node **oldTable;
     struct Node*current;
@@ -58,24 +58,25 @@ void expandHash(SymTable_T oSymTable){
     oSymTable->bucketCount = auBucketCounts[bucketIndex++];
     oldTable = oSymTable->hashVals;
 
-    /*do i have to re mallc **hashvals ? */
     oSymTable->hashVals = (struct Node**)malloc(sizeof(struct Node));
     while (count != oSymTable->bucketCount){
         oSymTable->hashVals[count] = (struct Node*)malloc(sizeof(struct Node));
-        if (oSymTable->hashVals[count]==NULL) return NULL;
+        if (oSymTable->hashVals[count]==NULL) return;
         count++;
     }    
 
-    for (size_t i = 0; i<(auBucketCounts[bucketIndex]);i++){
-        for (current = oSymTable->hashVals[i];
-            current != NULL;
-            current = next)
-        {
+    /*this do not work bc its not accessing hash val old and new right*/
+    count = 0;
+    while(count<auBucketCounts[bucketIndex]){
+        current = oSymTable->hashVals[count];
+        while(current != NULL){
             SymTable_put(oSymTable,current->pcKey,current->pvValue);
-            next = current->next;
-            
+            free(oldTable[count]);
+            current = current->next;
         }
+        count++;
     }
+    free(oldTable);
 }
 
 SymTable_T SymTable_new(void){
@@ -101,7 +102,6 @@ SymTable_T SymTable_new(void){
     return oSymTable;
 }
 
-
 /*helper func: given key, return pointer to node if it exists, NULL otherwise*/
 struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     struct Node *current;
@@ -123,19 +123,19 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
 
 void SymTable_free(SymTable_T oSymTable){
     struct Node *current;
-    struct Node *next;
+    size_t i = 0;
     
     assert(oSymTable != NULL);
 
-    for (size_t i = 0; i<(oSymTable->bucketCount);i++){
-        for (current = oSymTable->hashVals[i]->next;
-        current != NULL;
-        current = next)
-        {
-            next = current->next;
+    while(i<oSymTable->bucketCount){
+        current = oSymTable->hashVals[i]->next;
+        while(current!=NULL){
             free(current->pcKey);
             free(current);
+            current = current->next;
+
         }
+        i++;
     }
 
    free(oSymTable);
@@ -169,7 +169,7 @@ int SymTable_put(SymTable_T oSymTable,
             expandHash(oSymTable);
 
             /*rehash this new node*/
-            size_t hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
+            hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
 
         pcKeyCopy = malloc(sizeof(char)* (strlen(pcKey)+1));
@@ -186,7 +186,6 @@ int SymTable_put(SymTable_T oSymTable,
         return 1;
     }
 }
-
 
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue){
@@ -276,18 +275,17 @@ void SymTable_map(SymTable_T oSymTable,
 {
     struct Node *current;
     struct Node *next;
+    size_t i = 0;
     
     assert(oSymTable != NULL);
 
-    for (size_t i = 0; i<(oSymTable->bucketCount);i++){
-        for (current = oSymTable->hashVals[i]->next;
-        current != NULL;
-        current = next)
-        {
+    while(i<oSymTable->bucketCount){
+        current = oSymTable->hashVals[i]->next;
+        while(current!=NULL){
             (*pfApply)((char*)current->pcKey, (void*)current->pvValue, (void*)pvExtra);
-            next = current->next;
-            
+            current = current->next;
         }
+        i++;
     }
     
 }
