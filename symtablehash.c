@@ -132,17 +132,19 @@ void SymTable_free(SymTable_T oSymTable){
     assert(oSymTable != NULL);
 
     while(i< oSymTable->bucketCount){
-        current = oSymTable->hashVals[i]->next;
-        while(current!=NULL){
+        
+        for (current = oSymTable->hashVals[i];
+        current != NULL;
+        current = next)
+    {
             next = current->next;
             free(current->pcKey);
             free(current);
-            current =next;
-        }
+    }
         i++;
     }
-
-   free(oSymTable);
+    free(oSymTable->hashVals);
+    free(oSymTable);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
@@ -157,40 +159,44 @@ int SymTable_put(SymTable_T oSymTable,
     struct Node *newNode;
     struct Node* present;
     char *pcKeyCopy;
-    size_t hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
+    size_t hashVal; 
 
     assert(oSymTable != NULL);
     assert(pcKey!=NULL);
 
+    hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
+
     present = exists(oSymTable, pcKey,hashVal);
+    /**/
     if (present!=NULL) return 0;
     else {
         newNode = (struct Node*)malloc(sizeof(struct Node));
         if (newNode == NULL) return 0;
 
-        oSymTable->len ++;
+   
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len > oSymTable->bucketCount){
             /*expandHash(oSymTable);*/
-
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
 
         pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
-        if (pcKeyCopy==NULL) return 0;
+        if (pcKeyCopy==NULL) {
+            free(newNode); /*do this in list*/
+            return 0;
+        }
         strcpy(pcKeyCopy,pcKey);
         newNode->pcKey = pcKeyCopy;
         newNode->pvValue = pvValue;
 
+        /*set newnode-> next to current first node*/
+        newNode->next = oSymTable->hashVals[hashVal];
+    
         /*set newnode as first val in the list of the hashval*/
-        oSymTable->hashVals[hashVal]->next = newNode;
+        oSymTable->hashVals[hashVal] = newNode;
 
-        /*set its next to next in list, if available*/
-        if (oSymTable->hashVals[hashVal]->next->next !=NULL){
-            newNode->next = oSymTable->hashVals[hashVal]->next->next;
-        }
-
+         oSymTable->len ++;
         return 1;
     }
 }
