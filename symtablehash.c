@@ -85,7 +85,7 @@ SymTable_T SymTable_new(void){
     size_t count = 0;
 
 
-        printf("hello???");
+    printf("hello???");
 
 
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
@@ -116,6 +116,7 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     struct Node *next;
     
     assert(oSymTable != NULL);
+    assert(pcKey!=NULL);
 
     for (current =oSymTable->hashVals[hashVal];
         current != NULL;
@@ -167,7 +168,7 @@ int SymTable_put(SymTable_T oSymTable,
     size_t hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
 
     assert(oSymTable != NULL);
-
+    assert(pcKey!=NULL);
 
     present = exists(oSymTable, pcKey,hashVal);
     if (present!=NULL) return 0;
@@ -184,7 +185,8 @@ int SymTable_put(SymTable_T oSymTable,
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
 
-        pcKeyCopy = malloc(sizeof(char)* (strlen(pcKey)+1));
+        /*should this be size of char or size of char*  ? */
+        pcKeyCopy = malloc(sizeof(char*)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) return 0;
         strcpy(pcKeyCopy,pcKey);
         newNode->pcKey = pcKeyCopy;
