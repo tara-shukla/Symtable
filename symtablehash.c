@@ -81,9 +81,12 @@ void expandHash(SymTable_T oSymTable){
 }
 
 SymTable_T SymTable_new(void){
-    print("hello???");
     SymTable_T oSymTable;
     size_t count = 0;
+
+
+        printf("hello???");
+
 
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
     if (oSymTable==NULL){
