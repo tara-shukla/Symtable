@@ -91,12 +91,14 @@ SymTable_T SymTable_new(void){
 
     /*allocate space for all the nodes representing hash values in the hash table*/
     oSymTable->hashVals = (struct Node**)malloc(sizeof(struct Node));
+    if (oSymTable->hashVals==NULL) return NULL;
+
     while (count != oSymTable->bucketCount){
         oSymTable->hashVals[count] = (struct Node*)malloc(sizeof(struct Node));
         if (oSymTable->hashVals[count]==NULL) return NULL;
         count++;
     }
-
+    
     oSymTable->len = 0;
     /*print testing*/
     printf("symtable new");
