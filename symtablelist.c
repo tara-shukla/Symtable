@@ -35,7 +35,7 @@ SymTable_T SymTable_new(void){
 }
 
 /*helper func: given key, return pointer to node if it exists, NULL otherwise*/
-struct Node * exists(SymTable_T oSymTable,const char *pcKey){
+static struct Node * exists(SymTable_T oSymTable,const char *pcKey){
     struct Node *current;
     struct Node *next;
     
@@ -156,12 +156,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
 
     current = oSymTable->first;
+    prev = NULL;
     while(current!=target&&current!=NULL){
         prev = current;
         current = current->next;
     }
 
-
+    if (current == NULL) return NULL; 
     oSymTable->len--;
     val = current->pvValue;
 
