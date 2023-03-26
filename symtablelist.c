@@ -92,7 +92,10 @@ int SymTable_put(SymTable_T oSymTable,
             return 0;
 
         pcKeyCopy = malloc(sizeof(char)* (strlen(pcKey)+1));
-        if (pcKeyCopy==NULL) return 0;
+        if (pcKeyCopy==NULL) {
+            free(newNode);
+            return 0;
+        }
         strcpy(pcKeyCopy,pcKey);
         newNode->pcKey = pcKeyCopy;
         newNode->pvValue = pvValue;

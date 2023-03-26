@@ -162,8 +162,9 @@ int SymTable_put(SymTable_T oSymTable,
     hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
 
     present = exists(oSymTable, pcKey,hashVal);
-    /**/
+    /*if the node is present, can't put: return 0*/
     if (present!=NULL) return 0;
+    /*else put*/
     else {
         newNode = (struct Node*)malloc(sizeof(struct Node));
         if (newNode == NULL) return 0;
@@ -178,7 +179,7 @@ int SymTable_put(SymTable_T oSymTable,
 
         pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) {
-            free(newNode); /*do this in list*/
+            free(newNode); 
             return 0;
         }
         strcpy(pcKeyCopy,pcKey);
