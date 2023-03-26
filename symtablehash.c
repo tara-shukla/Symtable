@@ -90,14 +90,8 @@ SymTable_T SymTable_new(void){
     oSymTable->bucketCount = auBucketCounts[0]; /*start at 509 buckets*/
 
     /*allocate space for all the nodes representing hash values in the hash table*/
-    oSymTable->hashVals = (struct Node**)malloc(sizeof(struct Node));
+    oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
     if (oSymTable->hashVals==NULL) return NULL;
-
-    while (count != oSymTable->bucketCount){
-        oSymTable->hashVals[count] = (struct Node*)malloc(sizeof(struct Node));
-        if (oSymTable->hashVals[count]==NULL) return NULL;
-        count++;
-    }
 
     oSymTable->len = 0;
     
