@@ -135,6 +135,7 @@ void SymTable_free(SymTable_T oSymTable){
         current = oSymTable->hashVals[i]->next;
         while(current!=NULL){
             next = current->next;
+            assert(current->pcKey!=NULL);
             free(current->pcKey);
             free(current);
             current =next;
@@ -177,7 +178,6 @@ int SymTable_put(SymTable_T oSymTable,
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
 
-        /*should this be size of char or size of char*  ? */
         pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) return 0;
         strcpy(pcKeyCopy,pcKey);
