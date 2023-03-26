@@ -251,7 +251,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     }
 
 
-    current = oSymTable->hashVals[hashVal]->next;
+    current = oSymTable->hashVals[hashVal];
     while(current!=target&&current!=NULL){
         prev = current;
         current = current->next;
@@ -262,12 +262,11 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     val = current->pvValue;
 
     /*check if target was first*/
-    if (current==oSymTable->hashVals[hashVal]->next){
-        oSymTable->hashVals[hashVal]->next = current->next;
+    if (current==oSymTable->hashVals[hashVal]){
+        oSymTable->hashVals[hashVal] = current->next;
     }
     else {
         prev->next = current->next;
-
     }
 
     free(current->pcKey);
