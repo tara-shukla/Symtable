@@ -9,7 +9,8 @@
 
 /*stores list of bucket counts*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521}; 
-/*static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);*/
+/*stores number of bucket counts*/
+static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
 
 
 struct Node {
@@ -55,6 +56,10 @@ void expandHash(SymTable_T oSymTable){
         bucketIndex++;
     }
 
+    /*check if bucketcount index is last index; if not, increase bucketcount*/
+    if (bucketIndex==numBucketCounts){
+        return;
+    }
     oSymTable->bucketCount = auBucketCounts[bucketIndex++];
     oldTable = oSymTable->hashVals;
 
@@ -165,8 +170,8 @@ int SymTable_put(SymTable_T oSymTable,
 
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
-        if (oSymTable->len > oSymTable->bucketCount){
-            /*expandHash(oSymTable);*/
+        if (oSymTable->len = (oSymTable->bucketCount)-1){
+            expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
