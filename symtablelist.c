@@ -171,8 +171,10 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         oSymTable->first = current->next;
     }
     else {
-        prev->next = current->next;
-
+        if (prev!=NULL){
+            prev->next = current->next;
+        }
+        
     }
 
     free(current->pcKey);
