@@ -8,7 +8,7 @@
 
 /*stores list of bucket counts*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521}; 
-static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
+/*static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);*/
 
 
 struct Node {
@@ -49,7 +49,6 @@ void expandHash(SymTable_T oSymTable){
     int bucketIndex = 0;
     struct Node **oldTable;
     struct Node*current;
-    struct Node*next;
 
     while(auBucketCounts[bucketIndex]!=oSymTable->bucketCount){
         bucketIndex++;
@@ -274,7 +273,6 @@ void SymTable_map(SymTable_T oSymTable,
      const void *pvExtra)
 {
     struct Node *current;
-    struct Node *next;
     size_t i = 0;
     
     assert(oSymTable != NULL);
