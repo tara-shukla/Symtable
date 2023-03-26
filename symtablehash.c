@@ -81,7 +81,7 @@ void expandHash(SymTable_T oSymTable){
 }
 
 SymTable_T SymTable_new(void){
-    
+    print("hello???");
     SymTable_T oSymTable;
     size_t count = 0;
 
