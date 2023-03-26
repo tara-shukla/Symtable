@@ -135,7 +135,6 @@ void SymTable_free(SymTable_T oSymTable){
         current = oSymTable->hashVals[i]->next;
         while(current!=NULL){
             next = current->next;
-            assert(current->pcKey!=NULL);
             free(current->pcKey);
             free(current);
             current =next;
@@ -172,7 +171,7 @@ int SymTable_put(SymTable_T oSymTable,
         oSymTable->len ++;
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len > oSymTable->bucketCount){
-            expandHash(oSymTable);
+            /*expandHash(oSymTable);*/
 
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
