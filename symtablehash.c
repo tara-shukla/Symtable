@@ -111,10 +111,8 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     assert(oSymTable != NULL);
     assert(pcKey!=NULL);
 
-    current = oSymTable->hashVals[hashVal]->next;
+    current = oSymTable->hashVals[hashVal];
     while(current!=NULL){
-        assert(current->pcKey!=NULL);
-
         if (strcmp((current->pcKey), pcKey)==0){
             return current;
         }
