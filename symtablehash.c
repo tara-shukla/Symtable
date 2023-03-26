@@ -282,7 +282,7 @@ void SymTable_map(SymTable_T oSymTable,
     assert(oSymTable != NULL);
 
     while(i<oSymTable->bucketCount){
-        current = oSymTable->hashVals[i]->next;
+        current = oSymTable->hashVals[i];
         while(current!=NULL){
             (*pfApply)((char*)current->pcKey, (void*)current->pvValue, (void*)pvExtra);
             current = current->next;
