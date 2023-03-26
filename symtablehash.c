@@ -107,7 +107,6 @@ SymTable_T SymTable_new(void){
 /*helper func: given key, return pointer to node if it exists, NULL otherwise*/
 struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     struct Node *current;
-    struct Node *next;
     
     assert(oSymTable != NULL);
     assert(pcKey!=NULL);
