@@ -98,6 +98,8 @@ SymTable_T SymTable_new(void){
     }
 
     oSymTable->len = 0;
+    /*print testing*/
+    printf("symtable new");
     return oSymTable;
 }
 
@@ -117,6 +119,8 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
         }
         next = current->next;
     }
+     /*print testing*/
+    printf("symtable exists helper");
     return NULL;
 }
 
@@ -141,6 +145,8 @@ void SymTable_free(SymTable_T oSymTable){
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
+     /*print testing*/
+    printf("symtable len");
     return oSymTable->len;
 }
 
@@ -181,7 +187,8 @@ int SymTable_put(SymTable_T oSymTable,
         newNode->next = oSymTable->hashVals[hashVal]->next->next;
         oSymTable->hashVals[hashVal]->next = newNode;
 
-
+    /*print testing*/
+    printf("symtable put");
         return 1;
     }
 }
