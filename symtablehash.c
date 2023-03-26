@@ -126,17 +126,18 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
 
 void SymTable_free(SymTable_T oSymTable){
     struct Node *current;
+    struct Node*next;
     size_t i = 0;
     
     assert(oSymTable != NULL);
 
-    while(i<oSymTable->bucketCount){
+    while(i< oSymTable->bucketCount){
         current = oSymTable->hashVals[i]->next;
         while(current!=NULL){
+            next = current->next;
             free(current->pcKey);
             free(current);
-            current = current->next;
-
+            current =next;
         }
         i++;
     }
@@ -190,7 +191,7 @@ int SymTable_put(SymTable_T oSymTable,
         if (oSymTable->hashVals[hashVal]->next->next !=NULL){
             newNode->next = oSymTable->hashVals[hashVal]->next->next;
         }
-        
+
         return 1;
     }
 }
