@@ -48,7 +48,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 /*helper function to rehash all values and expand the hash function*/
 void expandHash(SymTable_T oSymTable){
     size_t count = 0;
-    int bucketIndex = 0;
+    size_t bucketIndex = 0;
     struct Node **oldTable;
     struct Node*current;
 
@@ -170,7 +170,7 @@ int SymTable_put(SymTable_T oSymTable,
 
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
-        if (oSymTable->len = (oSymTable->bucketCount)-1){
+        if ((oSymTable->len) = (oSymTable->bucketCount)-1){
             expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
