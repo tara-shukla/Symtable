@@ -5,6 +5,8 @@
 
 #include "symtable.h"
 #include <assert.h>
+#include <stdio.h>
+
 
 /*stores list of bucket counts*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521}; 
@@ -98,7 +100,7 @@ SymTable_T SymTable_new(void){
         if (oSymTable->hashVals[count]==NULL) return NULL;
         count++;
     }
-    
+
     oSymTable->len = 0;
     /*print testing*/
     printf("symtable new");
