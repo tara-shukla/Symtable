@@ -5,7 +5,6 @@
 
 #include "symtable.h"
 #include <assert.h>
-#include <stdio.h>
 
 
 /*stores list of bucket counts*/
@@ -84,10 +83,6 @@ SymTable_T SymTable_new(void){
     SymTable_T oSymTable;
     size_t count = 0;
 
-
-    printf("hello???");
-
-
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
     if (oSymTable==NULL){
         return NULL;
@@ -105,8 +100,7 @@ SymTable_T SymTable_new(void){
     }
 
     oSymTable->len = 0;
-    /*print testing*/
-    printf("symtable new");
+    
     return oSymTable;
 }
 
@@ -118,17 +112,14 @@ struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     assert(oSymTable != NULL);
     assert(pcKey!=NULL);
 
-    for (current =oSymTable->hashVals[hashVal];
-        current != NULL;
-        current = next)
-    {
+    current = oSymTable->hashVals[hashVal];
+    while(current!=NULL){
         if (strcmp((current->pcKey), pcKey)==0){
             return current;
         }
-        next = current->next;
+        current = current->next;
     }
-     /*print testing*/
-    printf("symtable exists helper");
+
     return NULL;
 }
 
@@ -153,8 +144,7 @@ void SymTable_free(SymTable_T oSymTable){
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
-     /*print testing*/
-    printf("symtable len");
+    
     return oSymTable->len;
 }
 
@@ -195,9 +185,6 @@ int SymTable_put(SymTable_T oSymTable,
         /*check this, possible bug*/
         newNode->next = oSymTable->hashVals[hashVal]->next->next;
         oSymTable->hashVals[hashVal]->next = newNode;
-
-    /*print testing*/
-    printf("symtable put");
         return 1;
     }
 }
