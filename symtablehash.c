@@ -183,9 +183,14 @@ int SymTable_put(SymTable_T oSymTable,
         newNode->pcKey = pcKeyCopy;
         newNode->pvValue = pvValue;
 
-        /*check this, possible bug*/
-        newNode->next = oSymTable->hashVals[hashVal]->next->next;
+        /*set newnode as first val in the list of the hashval*/
         oSymTable->hashVals[hashVal]->next = newNode;
+
+        /*set its next to next in list, if available*/
+        if (oSymTable->hashVals[hashVal]->next->next !=NULL){
+            newNode->next = oSymTable->hashVals[hashVal]->next->next;
+        }
+        
         return 1;
     }
 }
