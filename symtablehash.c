@@ -5,6 +5,7 @@
 
 #include "symtable.h"
 #include <assert.h>
+#include <stdio.h>
 
 
 /*stores list of bucket counts*/
