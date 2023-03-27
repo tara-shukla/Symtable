@@ -75,12 +75,12 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     }
     bucketIndex+=1;
 
-    /*update oSymTable's bucketCount*/
-    oSymTable->bucketCount = auBucketCounts[bucketIndex];
-
     /*create new hash table for oSymTable*/
-    newTable = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
+    newTable = (struct Node**)calloc(auBucketCounts[bucketIndex],sizeof(struct Node*));
     if (newTable==NULL) return;
+
+     /*update oSymTable's bucketCount*/
+    oSymTable->bucketCount = auBucketCounts[bucketIndex];
 
     /*for each element in old table, rehash and add to new table*/    
     count = 0;
@@ -98,7 +98,8 @@ static void SymTable_expandHash(SymTable_T oSymTable){
             newNode = (struct Node*)malloc(sizeof(struct Node));
             if (newNode == NULL) return;
 
-            pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(current->pcKey)+1));
+            pcKeyCopy = (char*)calloc((strlen(current->pcKey)+1),sizeof(char));
+        
             if (pcKeyCopy==NULL) {
                 free(newNode); 
                 return;
@@ -117,7 +118,6 @@ static void SymTable_expandHash(SymTable_T oSymTable){
             free(current);
         }
         count++;
-        
     }
 
     free(oSymTable->hashVals);
