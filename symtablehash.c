@@ -12,7 +12,7 @@ static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 3274
 /*stores number of bucket counts*/
 static const size_t numBucketCounts = sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
 
-
+/*Nodes for linked list imp of symboltable*/
 struct Node {
    /* The binding key */
     char *pcKey;
@@ -23,9 +23,13 @@ struct Node {
    struct Node *next;
 };
 
+/*stores SymTable struct*/
 struct SymTable{
+    /*pointer to array of node pointer linked lists (storing bindings)*/
     struct Node** hashVals;
+    /*len = number of bindings in symboltable*/
     size_t len;
+    /*number of buckets that bindings can hash to*/
     size_t bucketCount;
 };
 
@@ -45,8 +49,8 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-/*helper function to rehash all values and expand the hash function*/
-void expandHash(SymTable_T oSymTable){
+/*helper function to rehash all values in oSymTableand expand the hash function*/
+void SymTable_expandHash(SymTable_T oSymTable){
     size_t count = 0;
     size_t bucketIndex = 0;
     struct Node **oldTable;
@@ -101,8 +105,8 @@ SymTable_T SymTable_new(void){
     return oSymTable;
 }
 
-/*helper func: given key, return pointer to node if it exists, NULL otherwise*/
-static struct Node * exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
+/*helper func: given key, return pointer to node if it exists in oSymTable, NULL otherwise*/
+static struct Node * SymTable_exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     struct Node *current;
     
     assert(oSymTable != NULL);
@@ -143,7 +147,7 @@ void SymTable_free(SymTable_T oSymTable){
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
-    
+    assert(oSymTable!=NULL);
     return oSymTable->len;
 }
 
@@ -161,7 +165,7 @@ int SymTable_put(SymTable_T oSymTable,
 
     hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
 
-    present = exists(oSymTable, pcKey,hashVal);
+    present = SymTable_exists(oSymTable, pcKey,hashVal);
     /*if the node is present, can't put: return 0*/
     if (present!=NULL) return 0;
     /*else put*/
@@ -172,7 +176,7 @@ int SymTable_put(SymTable_T oSymTable,
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len == (oSymTable->bucketCount)-1){
-            expandHash(oSymTable);
+            SymTable_expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
@@ -204,9 +208,10 @@ void *SymTable_replace(SymTable_T oSymTable,
     struct Node *present; 
     size_t hashVal = SymTable_hash(pcKey, oSymTable->bucketCount);
     assert (oSymTable!=NULL);
-    
+     assert(pcKey!=NULL);
 
-    present = exists(oSymTable, pcKey, hashVal);
+
+    present = SymTable_exists(oSymTable, pcKey, hashVal);
     if (present == NULL) return NULL;
 
     oldVal = present->pvValue;
@@ -220,9 +225,10 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
     size_t hashVal = SymTable_hash(pcKey, oSymTable->bucketCount);
 
     assert(oSymTable!=NULL);
+    assert(pcKey!=NULL);
 
     
-    present = exists(oSymTable, pcKey, hashVal);
+    present = SymTable_exists(oSymTable, pcKey, hashVal);
     if (present==NULL) return 0;
     return 1;
 }
@@ -232,8 +238,9 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
     size_t hashVal = SymTable_hash(pcKey, oSymTable->bucketCount);
 
     assert(oSymTable!=NULL);
+    assert(pcKey!=NULL);
 
-    present = exists(oSymTable, pcKey,hashVal);
+    present = SymTable_exists(oSymTable, pcKey,hashVal);
     if (present==NULL) return NULL;
     return (void*)(present->pvValue);
 }
@@ -247,9 +254,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
     
     assert(oSymTable != NULL);
+    assert(pcKey!=NULL);
 
-
-    target = exists(oSymTable,pcKey, hashVal);
+    target = SymTable_exists(oSymTable,pcKey, hashVal);
     if (target==NULL){
         return NULL;
     }
@@ -286,6 +293,7 @@ void SymTable_map(SymTable_T oSymTable,
     size_t i = 0;
     
     assert(oSymTable != NULL);
+    assert(pfApply!=NULL);
 
     while(i<oSymTable->bucketCount){
         current = oSymTable->hashVals[i];

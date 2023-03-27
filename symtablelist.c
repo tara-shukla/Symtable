@@ -6,6 +6,7 @@
 #include "symtable.h"
 #include <assert.h>
 
+/*Nodes for linked list imp of symboltable*/
 struct Node {
    /* The binding key */
     char *pcKey;
@@ -16,9 +17,11 @@ struct Node {
    struct Node *next;
 };
 
+/*stores SymTable struct*/
 struct SymTable{
     /*address of first node*/
     struct Node *first;
+    /*len = number of bindings in symboltable*/
     size_t len;
 };
 
@@ -34,12 +37,13 @@ SymTable_T SymTable_new(void){
    return oSymTable;
 }
 
-/*helper func: given key, return pointer to node if it exists, NULL otherwise*/
-static struct Node * exists(SymTable_T oSymTable,const char *pcKey){
+/*helper func: given pcKey, return pointer to node if it exists in oSymTable, NULL otherwise*/
+static struct Node * SymTable_exists(SymTable_T oSymTable,const char *pcKey){
     struct Node *current;
     struct Node *next;
     
     assert(oSymTable != NULL);
+    assert(pcKey!=NULL);
 
     for (current = oSymTable->first;
         current != NULL;
@@ -72,6 +76,7 @@ void SymTable_free(SymTable_T oSymTable){
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
+    assert(oSymTable!=NULL);
     return oSymTable->len;
 }
 
@@ -83,8 +88,9 @@ int SymTable_put(SymTable_T oSymTable,
     char *pcKeyCopy;
 
     assert(oSymTable != NULL);
+    assert(pcKey!=NULL);
 
-    present = exists(oSymTable, pcKey);
+    present = SymTable_exists(oSymTable, pcKey);
     if (present!=NULL) return 0;
     else {
         newNode = (struct Node*)malloc(sizeof(struct Node));
@@ -112,9 +118,11 @@ void *SymTable_replace(SymTable_T oSymTable,
     
     const void * oldVal;
     struct Node *present; 
-    assert (oSymTable!=NULL);
 
-    present = exists(oSymTable, pcKey);
+    assert (oSymTable!=NULL);
+    assert(pcKey!=NULL);
+
+    present = SymTable_exists(oSymTable, pcKey);
     if (present == NULL) return NULL;
 
     oldVal = present->pvValue;
@@ -125,8 +133,9 @@ void *SymTable_replace(SymTable_T oSymTable,
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
     struct Node *present; 
     assert(oSymTable!=NULL);
+    assert(pcKey!=NULL);
 
-    present = exists(oSymTable, pcKey);
+    present = SymTable_exists(oSymTable, pcKey);
     if (present==NULL) return 0;
     return 1;
 }
@@ -134,8 +143,9 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
     struct Node *present; 
     assert(oSymTable!=NULL);
+    assert(pcKey!=NULL);
 
-    present = exists(oSymTable, pcKey);
+    present = SymTable_exists(oSymTable, pcKey);
     if (present==NULL) return NULL;
     return (void*)(present->pvValue);
 }
@@ -148,8 +158,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
     
     assert(oSymTable != NULL);
+    assert(pcKey!=NULL);
 
-    target = exists(oSymTable,pcKey);
+    target = SymTable_exists(oSymTable,pcKey);
     if (target==NULL){
         return NULL;
     }

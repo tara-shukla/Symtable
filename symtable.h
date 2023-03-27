@@ -9,8 +9,9 @@
 #include <string.h>
 
 
-
+/*struct storing symtable*/
 struct SymTable;
+/*SymTable_T stores pointer to symtable struct*/
 typedef struct SymTable *SymTable_T;
 
 /*return a new SymTable object that contains no bindings, 
@@ -40,10 +41,10 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey);
 /*return the value in oSymTable w key pcKey, or NULL if no such binding exists*/
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
 
-/*remove and return value with key pcKey; if nonexistent, return null*/
+/*remove and return value in oSymTable with key pcKey; if nonexistent, return null*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 
-/*apply pfApply to each binding, passing pvExtra as parameter*/
+/*apply pfApply to each binding's pcKey and pvValue in oSymTable, passing pvExtra as parameter*/
 void SymTable_map(SymTable_T oSymTable,
      void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
      const void *pvExtra);
