@@ -92,6 +92,11 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+symtablehash.c: lines 162,211,300: medium priority:
+   Do you want to validate 'pvValue' through an assert?
+
+pvValue is a void pointer that is never dereferenced. 
+It is ok for it to be null, so the warning is invalid.
 
 
 ------------------------------------------------------------------------

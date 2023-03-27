@@ -73,10 +73,10 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     oSymTable->bucketCount = auBucketCounts[++bucketIndex];
 
     oldTable = oSymTable->hashVals;
-
-    oSymTable->hashVals = (struct Node**)malloc(sizeof(struct Node));
+    
+    oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
     while (count != oSymTable->bucketCount){
-        oSymTable->hashVals[count] = (struct Node*)malloc(sizeof(struct Node));
+        oSymTable->hashVals[count] = (struct Node*)calloc(1,sizeof(struct Node));
         if (oSymTable->hashVals[count]==NULL) return;
         count++;
     }    
@@ -111,7 +111,8 @@ SymTable_T SymTable_new(void){
     return oSymTable;
 }
 
-/*helper func: given key, return pointer to node if it exists in oSymTable, NULL otherwise*/
+/*helper func: given pcKey that hashes to hashVal*/
+/*return pointer to node if it exists in oSymTable, NULL otherwise*/
 static struct Node * SymTable_exists(SymTable_T oSymTable,const char *pcKey, size_t hashVal){
     struct Node *current;
     
