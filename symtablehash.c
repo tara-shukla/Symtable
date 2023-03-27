@@ -79,7 +79,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     
     /*create new hash table for oSymTable*/
     oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
-    if (oSymTable->hashVals==NULL) return NULL;
+    if (oSymTable->hashVals==NULL) return;
 
     /*for each element in old table, rehash and add to new table*/    
     count = 0;
