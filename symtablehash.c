@@ -83,13 +83,12 @@ static void SymTable_expandHash(SymTable_T oSymTable){
 
     /*for each element in old table, rehash and add to new table*/    
     count = 0;
-
     while(count< oSymTable->len){
-        
         for (current = oldTable[count];
         current != NULL;
         current = next)
         {
+            printf(current->pcKey);
             next = current->next;
             SymTable_put(oSymTable,current->pcKey,current->pvValue);
             free(current->pcKey);
