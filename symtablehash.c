@@ -51,81 +51,8 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 }
 
 /*helper function to rehash all values in oSymTableand expand the hash function*/
+
 static void SymTable_expandHash(SymTable_T oSymTable){
-    size_t count = 0;
-    size_t bucketIndex = 0;
-    struct Node **newTable;
-    struct Node*current;
-    struct Node*next;
-    size_t hashVal;
-    struct Node *newNode;
-    char *pcKeyCopy;
-
-    assert(oSymTable!=NULL);
-    assert(oSymTable->hashVals!=NULL);
-
-    /*find the bucketIndex of the current bucketCount*/
-    while(auBucketCounts[bucketIndex]!=oSymTable->bucketCount){
-        bucketIndex++;
-    }
-
-    /*check if bucketcount index is last index; if not, increase bucketcount*/
-    if (bucketIndex==numBucketCounts){
-        return;
-    }
-    bucketIndex+=1;
-
-    /*create new hash table for oSymTable*/
-    newTable = (struct Node**)calloc(auBucketCounts[bucketIndex],sizeof(struct Node*));
-    if (newTable==NULL) return;
-
-     /*update oSymTable's bucketCount*/
-    oSymTable->bucketCount = auBucketCounts[bucketIndex];
-
-    /*for each element in old table, rehash and add to new table*/    
-    count = 0;
-    
-    while(count< oSymTable->len){
-        for (current = oSymTable->hashVals[count];
-            current != NULL;
-            current = next)
-        {
-            next = current->next;
-
-            /*add the node into the new hashtable*/
-            hashVal = SymTable_hash(current->pcKey,oSymTable->bucketCount);
-
-            newNode = (struct Node*)malloc(sizeof(struct Node));
-            if (newNode == NULL) return;
-
-            pcKeyCopy = (char*)calloc((strlen(current->pcKey)+1),sizeof(char));
-        
-            if (pcKeyCopy==NULL) {
-                free(newNode); 
-                return;
-            }
-            strcpy(pcKeyCopy,current->pcKey);
-            newNode->pcKey = pcKeyCopy;
-            newNode->pvValue = current->pvValue;
-
-            /*set newnode-> next to current first node*/
-            newNode->next = newTable[hashVal];
-            /*set newnode as first val in the list of the hashval*/
-            newTable[hashVal] = newNode;
-
-
-            free(current->pcKey);
-            free(current);
-        }
-        count++;
-    }
-
-    free(oSymTable->hashVals);
-    oSymTable->hashVals = newTable;
-}
-
-
-static void SymTable_expandHash2(SymTable_T oSymTable){
     
     struct Node ** oldTable;
     struct Node* current;
@@ -156,6 +83,8 @@ static void SymTable_expandHash2(SymTable_T oSymTable){
         oSymTable->hashVals = oldTable;
         return;
     }
+
+    printf("%zu",oSymTable->bucketCount);
 
     /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
     i = 0;
@@ -265,7 +194,7 @@ int SymTable_put(SymTable_T oSymTable,
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len == (oSymTable->bucketCount)-1){
-            SymTable_expandHash2(oSymTable);
+            SymTable_expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
