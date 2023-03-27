@@ -59,6 +59,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     assert(oSymTable!=NULL);
     assert(oSymTable->hashVals!=NULL);
 
+    /*find the bucketIndex of the current bucketCount*/
     while(auBucketCounts[bucketIndex]!=oSymTable->bucketCount){
         bucketIndex++;
     }
@@ -67,7 +68,10 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     if (bucketIndex==numBucketCounts){
         return;
     }
-    oSymTable->bucketCount = auBucketCounts[bucketIndex++];
+
+    /*update oSymTable's bucketCount*/
+    oSymTable->bucketCount = auBucketCounts[++bucketIndex];
+
     oldTable = oSymTable->hashVals;
 
     oSymTable->hashVals = (struct Node**)malloc(sizeof(struct Node));
@@ -178,7 +182,7 @@ int SymTable_put(SymTable_T oSymTable,
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len == (oSymTable->bucketCount)-1){
-            /*SymTable_expandHash(oSymTable);*/
+            SymTable_expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
