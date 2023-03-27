@@ -189,14 +189,6 @@ int SymTable_put(SymTable_T oSymTable,
         newNode = (struct Node*)malloc(sizeof(struct Node));
         if (newNode == NULL) return 0;
 
-   
-        /*check if binding count exceeds bucket count, and if so adjust bucket count*/
-        if (oSymTable->len == (oSymTable->bucketCount)-1){
-            SymTable_expandHash(oSymTable);
-            /*rehash this new node*/
-            hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
-        }
-
         pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
         if (pcKeyCopy==NULL) {
             free(newNode); 
@@ -213,6 +205,12 @@ int SymTable_put(SymTable_T oSymTable,
         oSymTable->hashVals[hashVal] = newNode;
 
          oSymTable->len ++;
+
+
+        /*check if binding count exceeds bucket count, and if so adjust bucket count*/
+        if (oSymTable->len == (oSymTable->bucketCount)){
+            SymTable_expandHash(oSymTable);
+        }
         return 1;
     }
 }
