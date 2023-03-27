@@ -140,10 +140,10 @@ static void SymTable_expandHash2(SymTable_T oSymTable){
 
     /*get newBucketCount, or return if the count is the highest bucket count*/
     if(oSymTable->bucketCount == auBucketCounts[numBucketCounts-1]) return;
-    for (size_t j = 0; j<numBucketCounts-1;j++){
-        if (oSymTable->bucketCount == auBucketCounts[j]){
-            j++;
-            newBucketCount=auBucketCounts[j];
+    for ( i = 0; i<numBucketCounts-1;i++){
+        if (oSymTable->bucketCount == auBucketCounts[i]){
+            i++;
+            newBucketCount=auBucketCounts[i];
             break; 
         }
     }
@@ -158,6 +158,7 @@ static void SymTable_expandHash2(SymTable_T oSymTable){
     }
 
     /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
+    i = 0;
     while(i< oSymTable->len){
         
         for (current = oldTable[i];
