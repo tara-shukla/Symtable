@@ -93,12 +93,12 @@ static void SymTable_expandHash(SymTable_T oSymTable){
             next = current->next;
 
             /*add the node into the new hashtable*/
-            hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
+            hashVal = SymTable_hash(current->pcKey,oSymTable->bucketCount);
 
             newNode = (struct Node*)malloc(sizeof(struct Node));
             if (newNode == NULL) return;
 
-            pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
+            pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(current->pcKey)+1));
             if (pcKeyCopy==NULL) {
                 free(newNode); 
                 return;
