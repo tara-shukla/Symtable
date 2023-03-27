@@ -54,13 +54,12 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 
 static void SymTable_expandHash(SymTable_T oSymTable){
     
-    struct Node ** oldTable;
+    struct Node** oldTable;
     struct Node* current;
     struct Node* next;
     size_t i = 0;
     size_t oldBucketCount = oSymTable->bucketCount;
     size_t newBucketCount =0;
-
 
 
     assert(oSymTable!=NULL);
@@ -75,16 +74,15 @@ static void SymTable_expandHash(SymTable_T oSymTable){
         }
     }
     oSymTable->bucketCount = newBucketCount;
-
+    oldTable = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
     oldTable = oSymTable->hashVals;
+
     oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
     if (oSymTable->hashVals==NULL) {
         oSymTable->bucketCount = oldBucketCount;
         oSymTable->hashVals = oldTable;
         return;
     }
-
-    printf("%zu",oSymTable->bucketCount);
 
     /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
     i = 0;
@@ -99,6 +97,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
             free(current->pcKey);
             free(current);
         }
+
         i++;
     }
 
