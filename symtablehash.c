@@ -54,9 +54,12 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 static void SymTable_expandHash(SymTable_T oSymTable){
     size_t count = 0;
     size_t bucketIndex = 0;
-    struct Node **oldTable;
+    struct Node **newTable;
     struct Node*current;
     struct Node*next;
+    size_t hashVal;
+    struct Node *newNode;
+    char *pcKeyCopy;
 
     assert(oSymTable!=NULL);
     assert(oSymTable->hashVals!=NULL);
@@ -75,25 +78,41 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     /*update oSymTable's bucketCount*/
     oSymTable->bucketCount = auBucketCounts[bucketIndex];
 
-    /*point to old hash table (to later delete)*/
-    oldTable = oSymTable->hashVals;
-    
     /*create new hash table for oSymTable*/
-    oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
-    if (oSymTable->hashVals==NULL) return;
+    newTable = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
+    if (newTable==NULL) return;
 
     /*for each element in old table, rehash and add to new table*/    
     count = 0;
     
     while(count< oSymTable->len){
-        for (current = oldTable[count];
+        for (current = oSymTable->hashVals[count];
             current != NULL;
             current = next)
         {
-            assert(current!=NULL);
-            
             next = current->next;
-            SymTable_put(oSymTable,current->pcKey,current->pvValue);
+
+            /*add the node into the new hashtable*/
+            hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
+
+            newNode = (struct Node*)malloc(sizeof(struct Node));
+            if (newNode == NULL) return 0;
+
+            pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
+            if (pcKeyCopy==NULL) {
+                free(newNode); 
+                return 0;
+            }
+            strcpy(pcKeyCopy,current->pcKey);
+            newNode->pcKey = pcKeyCopy;
+            newNode->pvValue = current->pvValue;
+
+            /*set newnode-> next to current first node*/
+            newNode->next = newTable[hashVal];
+            /*set newnode as first val in the list of the hashval*/
+            newTable[hashVal] = newNode;
+
+
             free(current->pcKey);
             free(current);
         }
@@ -101,7 +120,8 @@ static void SymTable_expandHash(SymTable_T oSymTable){
         
     }
 
-    free(oldTable);
+    free(oSymTable->hashVals);
+    oSymTable->hashVals = newTable;
 }
 
 SymTable_T SymTable_new(void){
