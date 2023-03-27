@@ -3,7 +3,7 @@ Assignment 3 readme File
 ------------------------------------------------------------------------
 What is your name?
 
-
+Tara Shukla
 
 ------------------------------------------------------------------------
 What authorized sources of information did you use to complete the
@@ -31,14 +31,15 @@ unauthorized sources of information.
 ------------------------------------------------------------------------
 What is your assessment of the assignment? Was it helpful? Was it fun?
 
-
+I liked it! Provided good learning for hashing, pointer to pointer, 
+and void poitners.
 
 ------------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
 
-
+n/a
 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablelist.c, and what are your
@@ -46,6 +47,7 @@ disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
 "None."
 
+None.
 
 
 ------------------------------------------------------------------------
@@ -54,7 +56,14 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+symtablelist.c: lines 85, 117: medium priority:
+   Do you want to validate 'pvValue' through an assert?
 
+   symtablelist.c: line 199: medium priority:
+   Do you want to validate 'pvExtra' through an assert?
+
+pvValue and pvExtra are both void pointers that are never dereferenced. 
+It is ok for them to be null, so the warning is invalid.
 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablehash.c, and what are your

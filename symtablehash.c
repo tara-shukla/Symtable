@@ -50,11 +50,14 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 }
 
 /*helper function to rehash all values in oSymTableand expand the hash function*/
-void SymTable_expandHash(SymTable_T oSymTable){
+static void SymTable_expandHash(SymTable_T oSymTable){
     size_t count = 0;
     size_t bucketIndex = 0;
     struct Node **oldTable;
     struct Node*current;
+
+    assert(oSymTable!=NULL);
+    assert(oSymTable->hashVals!=NULL);
 
     while(auBucketCounts[bucketIndex]!=oSymTable->bucketCount){
         bucketIndex++;
@@ -74,7 +77,6 @@ void SymTable_expandHash(SymTable_T oSymTable){
         count++;
     }    
 
-    /*this do not work bc its not accessing hash val old and new right*/
     count = 0;
     while(count<auBucketCounts[bucketIndex]){
         current = oSymTable->hashVals[count];
@@ -263,12 +265,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
 
     current = oSymTable->hashVals[hashVal];
+    prev = NULL;
     while(current!=target&&current!=NULL){
         prev = current;
         current = current->next;
     }
 
-
+    if (current == NULL) return NULL; 
     oSymTable->len--;
     val = current->pvValue;
 
@@ -277,7 +280,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
         oSymTable->hashVals[hashVal] = current->next;
     }
     else {
-        prev->next = current->next;
+        if (prev!=NULL){
+            prev->next = current->next;
+        }
     }
 
     free(current->pcKey);
