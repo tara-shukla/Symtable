@@ -89,13 +89,14 @@ static void SymTable_expandHash(SymTable_T oSymTable){
         current != NULL;
         current = next)
         {
-            printf(current->pcKey);
             next = current->next;
             SymTable_put(oSymTable,current->pcKey,current->pvValue);
             free(current->pcKey);
             free(current);
         }
+        printf(count);
         count++;
+        
     }
 
     free(oldTable);
