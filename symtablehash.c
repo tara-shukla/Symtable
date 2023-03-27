@@ -74,9 +74,8 @@ static void SymTable_expandHash(SymTable_T oSymTable){
         }
     }
     oSymTable->bucketCount = newBucketCount;
-    oldTable = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
-    *oldTable = &oSymTable->hashVals;
-
+   
+    oldTable = oSymTable->hashVals;
     oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
     if (oSymTable->hashVals==NULL) {
         oSymTable->bucketCount = oldBucketCount;
@@ -86,7 +85,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
 
     /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
     i = 0;
-    while(i< oSymTable->len){
+    while(i< oldBucketCount){
         
         for (current = oldTable[i];
             current != NULL;
