@@ -178,7 +178,7 @@ int SymTable_put(SymTable_T oSymTable,
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len == (oSymTable->bucketCount)-1){
-            SymTable_expandHash(oSymTable);
+            /*SymTable_expandHash(oSymTable);*/
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
