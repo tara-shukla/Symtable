@@ -84,6 +84,7 @@ disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
 "None."
 
+None.
 
 
 ------------------------------------------------------------------------
@@ -92,8 +93,11 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-symtablehash.c: lines 162,211,300: medium priority:
+symtablehash.c: line 221,172: medium priority:
    Do you want to validate 'pvValue' through an assert?
+
+symtablehash.c: line 310: medium priority:
+   Do you want to validate 'pvExtra' through an assert?
 
 pvValue is a void pointer that is never dereferenced. 
 It is ok for it to be null, so the warning is invalid.
@@ -120,8 +124,8 @@ The non-expanding hash table implementation with:
 -- 500000 bindings consumed 76.366513 seconds.
 
 The expanding hash table implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed 0.000000 seconds.
+-- 500 bindings consumed 0.000000 seconds.
+-- 5000 bindings consumed 0.009202 seconds.
+-- 50000 bindings consumed 0.144241 seconds.
+-- 500000 bindings consumed 1.679748 seconds.
