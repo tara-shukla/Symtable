@@ -5,7 +5,6 @@
 
 #include "symtable.h"
 #include <assert.h>
-#include <stdio.h>
 
 
 /*stores list of bucket counts*/
@@ -196,7 +195,6 @@ int SymTable_put(SymTable_T oSymTable,
             SymTable_expandHash(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
-            printf("len: %d\n", (int)(oSymTable->len));
         }
 
         pcKeyCopy = (char*)malloc(sizeof(char)* (strlen(pcKey)+1));
