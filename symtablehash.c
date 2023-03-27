@@ -94,7 +94,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
             free(current->pcKey);
             free(current);
         }
-        printf(count);
+        printf("%d",count);
         count++;
         
     }
