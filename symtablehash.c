@@ -85,8 +85,7 @@ static void SymTable_expandHash(SymTable_T oSymTable){
 
     /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
     i = 0;
-    /*<=oldBucketCount*/
-    while(i<=oSymTable->len){
+    while(i<=oldBucketCount){
         
         for (current = oldTable[i];
             current != NULL;
