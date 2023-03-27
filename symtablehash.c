@@ -124,6 +124,51 @@ static void SymTable_expandHash(SymTable_T oSymTable){
     oSymTable->hashVals = newTable;
 }
 
+
+static void SymTable_expandHash2(SymTable_T oSymTable){
+    
+    size_t newBucketCount;
+    struct Node ** oldTable;
+    struct Node* current;
+    struct Node* next;
+    int i = 0;
+
+    assert(oSymTable!=NULL);
+
+    /*get newBucketCount, or return if the count is the highest bucket count*/
+    if(oSymTable->bucketCount == auBucketCounts[numBucketCounts-1]) return;
+    for (size_t i = 0; i<numBucketCounts-1;i++){
+        if (oSymTable->bucketCount == auBucketCounts[i]){
+            i++;
+            newBucketCount=auBucketCounts[i];
+            break; 
+        }
+    }
+    oSymTable->bucketCount = newBucketCount;
+
+    oldTable = oSymTable->hashVals;
+    oSymTable->hashVals = (struct Node**)calloc(oSymTable->bucketCount,sizeof(struct Node*));
+    if (oSymTable->hashVals==NULL) return NULL;
+
+    /*iterate through all buckets, all nodes of the old hash table. rehash and put into new one*/
+
+    while(i< oSymTable->len){
+        
+        for (current = oldTable[i];
+            current != NULL;
+            current = next)
+        {
+            next = current->next;
+            SymTable_put(oSymTable,current->pcKey,current->pvValue);
+            free(current->pcKey);
+            free(current);
+        }
+        i++;
+    }
+
+    free(oldTable);
+}
+
 SymTable_T SymTable_new(void){
     SymTable_T oSymTable;
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
@@ -213,7 +258,7 @@ int SymTable_put(SymTable_T oSymTable,
    
         /*check if binding count exceeds bucket count, and if so adjust bucket count*/
         if (oSymTable->len == (oSymTable->bucketCount)-1){
-            SymTable_expandHash(oSymTable);
+            SymTable_expandHash2(oSymTable);
             /*rehash this new node*/
             hashVal = SymTable_hash(pcKey,oSymTable->bucketCount);
         }
